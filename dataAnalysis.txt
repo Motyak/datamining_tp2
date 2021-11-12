@@ -1,0 +1,104 @@
+Différents types de données :
+
+Nominal : no measurements between data (labels)
+  -> we can only calculate the mode
+Ordinal : we can order data but not the distance
+  -> we can calculate mode and median but not the mean
+Interval : we have order and distance but no absolute zero
+  -> we can calculate mode, median and the mean.
+     we can't say that 10°C is twice as hot as 5°C
+Ratio : interval with true 0 value (= absence of ..).
+     we can say that 50°K is twice as hot as 25°K
+
+
+Valeurs qualitative : label ou texte, on peut pas faire de
+    calculs dessus (sauf calculer le mode)
+     -> Nominal and ordinal
+
+Valeurs quantitatives : valeurs numériques, on peut calculer
+    des min/max, moyenne, médiane, etc... (mais ça peut ne
+    pas faire de sens => dépend du type de donnée vu plus haut)
+    -> Interval and ratio
+
+La visualization des données permet d'interpréter des données, 
+il faut choisir le type de graphique approprié, la bonne échelle, 
+on peut trouver des corrélations entre deux attributs mais cela
+veut pas nécessairement dire qu'il s'agit d'une cause direct.
+
+(no specific order)
+Analysis -> Visualization -> Preprocessing -> Analysis -> ...
+Clean data -> Transform Data -> Reduce data -> Clean data -> ...
+
+Clean data : supprimer ou remplacer les valeurs vides, supprimer
+les outliers
+
+Transform data : codifier les attributs qualitatifs en 
+quantitatifs pour pouvoir les exploiter (calculer la distance entre
+eux), convertir les valeurs à comparer dans un même 
+"format" (ex: salaires en devises différentes), 
+normaliser les données (pour les comparer sur une
+échelle adaptée)
+=> Rendre les données exploitables pour faire du machine learning
+ou de la data analysis
+
+Reduce data : on veut compacter les données pour n'avoir que ce
+qui est pertinent, aussi pour pouvoir le process plus rapidement
+(moins de charge cpu).
+On peut éliminer les attributs qui sont similaires (pour le
+dataset qui nous intéresse).
+On peut éliminer des individus tout en faisant en sorte de 
+garder la même distribution de valeurs (qualitatives ou
+quantitatives), on peut aussi tenter de prendre des
+individus aléatoires mais risque de bouleverser la 
+distribution de valeurs originelle.
+Ne sélectionner que les attributs utiles si on sait à
+l'avance ceux qui le seront.
+
+Toujours normaliser les données avant de faire une ACP
+sinon dans le cas où les données sont skewed ça mènera
+à une fausse interprétation.
+
+Quel cutoff utiliser pour l'ACP, combien d'axes on choisit ?
+Généralement quand on fait une ACP on cherche à calculer 
+combien d'axes permet d'avoir un pourcentage cumulé
+représentant 99% des données, les autres dimensions
+deviennent alors négligeables.
+
+On ne fait la classification qu'une fois qu'on a des résultats
+d'ACP satisfaisant (sinon on réitére entre clean, transform, 
+reduce et ACP)
+
+
+DANS L'ORDRE, ça fait :
+1) Préparation des données (travail manuel)
+    -> Analyse
+    -> Visualization
+    -> Preprocessing*
+    -> (on boucle)
+*Preprocessing :
+    -> Clean data
+    -> Transform data
+    -> Reduce data
+
+2) ACP : transformation de données pré-traitées pour
+    calculer le nombre d'attributs réellement pertinents
+    en vue de la classification à venir.
+
+3) Classification (mixte) :
+    1)Kmeans sur un grand nombre de classes
+    2)Construction du dendrogramme avec la classification
+        hierarchique ascendante
+    3)Détermination du nombre de classes optimal
+    4)Calcul des n clusters
+
+4) Classement -- prédiction :
+    Pouvoir placer de nouvelles données dans
+    un cluster approprié
+    -> Utilisation de l'apprentissage automatique
+
+_______________
+
+Si on a plusieurs idées de preprocessing et qu'on cherche à 
+savoir laquelle est la meilleure, on peut simplement faire une
+ACP par dataset pré-traités et voir lequel résultera en le
+moins d'attributs (suite à l'ACP) -- 99% cumulé de données
