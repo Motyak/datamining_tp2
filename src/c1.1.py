@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from R_square_clustering import r_square
 from sklearn.cluster import KMeans
+from scipy.cluster.hierarchy import dendrogram, linkage
 
 # lecture du fichier csv dans une dataframe
 data = pd.read_csv("data/Data_World_Development_Indicators2.csv")
@@ -160,8 +161,27 @@ plt.savefig('fig/k-means_elbow_method')
 plt.close()
 
 kmeans=KMeans() #default n_clusters=8
-clusters = kmeans.fit_predict(standardized_data[numerical_attrs])
+label = kmeans.fit_predict(standardized_data[numerical_attrs])
+u_labels = np.unique(label)
 fig = plt.figure(figsize=(8, 8))
-plt.scatter(standardized_data[numerical_attrs].to_numpy()[:,0], standardized_data[numerical_attrs].to_numpy()[:,1], c=clusters)
+for i in u_labels:
+    plt.scatter(standardized_data[numerical_attrs].to_numpy()[label == i , 0] , standardized_data[numerical_attrs].to_numpy()[label == i , 1] , label = i)
+plt.legend()
 plt.savefig('fig/k-means_k8')
 plt.close()
+
+lst_labels = list(map(lambda pair: pair[0]+str(pair[1]), data['Country Code']))
+linkage_matrix = linkage(standardized_data[numerical_attrs], 'ward')
+fig = plt.figure()
+dendrogram(
+    linkage_matrix,
+    color_threshold=0,
+    labels=lst_labels
+)
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Country Code')
+plt.ylabel('Distance')
+plt.tight_layout()
+plt.savefig('fig/hierarchical-clustering')
+plt.close()
+
